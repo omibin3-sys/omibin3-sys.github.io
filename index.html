@@ -19,67 +19,111 @@
     </style>
 </head>
 
-<body class="flex flex-col items-center justify-center min-h-screen bg-[#0d0d0d] text-white select-none">
+<body class="flex flex-col items-center justify-start min-h-screen bg-[#0d0d0d] text-white select-none pt-10">
 
 <h1 class="text-4xl font-bold mb-6 tracking-wide">DAYN PHOTO</h1>
 
-<!-- Slider -->
-<div class="swiper w-full max-w-2xl h-[260px] md:h-[420px] rounded-2xl overflow-hidden shadow-2xl">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./7.jpg"></div>
-        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./1.jpeg"></div>
-        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./2.jpeg"></div>
-        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./6.jpeg"></div>
-        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./3.jpeg"></div>
-        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./4.jpeg"></div>
-        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./5.jpeg"></div>
-    </div>
-
-    <!-- Pagination -->
-    <div class="swiper-pagination"></div>
-
-    <!-- Custom Arrows -->
-    <div class="swiper-button-prev !text-white"></div>
-    <div class="swiper-button-next !text-white"></div>
+<!-- 🚀 Tabs -->
+<div class="flex space-x-4 mb-6">
+    <button id="tabMain" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition">
+        DAYN PHOTO
+    </button>
+    <button id="tabXyesos" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition font-bold text-pink-400">
+        XYESOS PHOTO
+    </button>
 </div>
 
-<!-- Fullscreen modal -->
-<div id="fullscreenModal"
-     class="fixed inset-0 bg-black/90 hidden flex items-center justify-center z-50">
+<!-- 📷 Gallery Slider -->
+<div id="contentMain" class="w-full flex justify-center">
+    <div class="swiper w-full max-w-2xl h-[260px] md:h-[420px] rounded-2xl overflow-hidden shadow-2xl">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./7.jpg"></div>
+            <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./1.jpeg"></div>
+            <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./2.jpeg"></div>
+            <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./6.jpeg"></div>
+            <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./3.jpeg"></div>
+            <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./4.jpeg"></div>
+            <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./5.jpeg"></div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev !text-white"></div>
+        <div class="swiper-button-next !text-white"></div>
+    </div>
+</div>
+
+<!-- 🔥 XYESOS Slider -->
+<div id="contentXyesos" class="hidden w-full flex justify-center">
+    <div class="swiper-x w-full max-w-2xl h-[260px] md:h-[420px] rounded-2xl overflow-hidden shadow-2xl">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./8.jpg"></div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev !text-white"></div>
+        <div class="swiper-button-next !text-white"></div>
+    </div>
+</div>
+
+<!-- Fullscreen Modal -->
+<div id="fullscreenModal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center z-50">
     <img id="modalImage" class="max-w-full max-h-full object-contain rounded-lg shadow-xl">
 </div>
 
 <script>
-    // Slider инициализация
+    // Init main gallery slider
     const swiper = new Swiper('.swiper', {
         loop: true,
         autoplay: { delay: 3500, disableOnInteraction: false },
-        effect: 'slide', // можно поменять на 'fade'
-        grabCursor: true,
         slidesPerView: 1,
         pagination: { el: '.swiper-pagination', clickable: true },
         navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
     });
 
-    // Fullscreen open
+    // Modal fullscreen logic
     const modal = document.getElementById('fullscreenModal');
     const modalImg = document.getElementById('modalImage');
 
-    document.querySelectorAll('.swiper-slide img').forEach(img => {
-        img.addEventListener('click', () => {
-            modalImg.src = img.src;
-            modal.classList.remove('hidden');
+    function enableFullscreen(selector) {
+        document.querySelectorAll(selector).forEach(img => {
+            img.addEventListener('click', () => {
+                modalImg.src = img.src;
+                modal.classList.remove('hidden');
+            });
         });
+    }
+
+    enableFullscreen('.swiper-slide img'); // for main gallery
+
+    modal.addEventListener('click', () => modal.classList.add('hidden'));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.add('hidden'); });
+
+    // 🔥 Tabs logic
+    const tabMain = document.getElementById("tabMain");
+    const tabXyesos = document.getElementById("tabXyesos");
+    const contentMain = document.getElementById("contentMain");
+    const contentXyesos = document.getElementById("contentXyesos");
+
+    let swiperXyesos = null;
+
+    tabMain.addEventListener("click", () => {
+        contentMain.classList.remove("hidden");
+        contentXyesos.classList.add("hidden");
     });
 
-    // Fullscreen close (по клику на область)
-    modal.addEventListener('click', () => {
-        modal.classList.add('hidden');
-    });
+    tabXyesos.addEventListener("click", () => {
+        contentMain.classList.add("hidden");
+        contentXyesos.classList.remove("hidden");
 
-    // Закрытие по ESC
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') modal.classList.add('hidden');
+        if (!swiperXyesos) {
+            swiperXyesos = new Swiper('.swiper-x', {
+                loop: true,
+                autoplay: { delay: 3500, disableOnInteraction: false },
+                slidesPerView: 1,
+                pagination: { el: '.swiper-pagination', clickable: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
+            });
+
+            enableFullscreen('.swiper-x .swiper-slide img'); // enable fullscreen for xyesos
+        }
     });
 </script>
 
