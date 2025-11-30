@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom Slider + Fullscreen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Swiper CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <style>
+        .carousel-inner { transition: transform .6s ease; }
+        .nav-dot { transition: transform .2s, opacity .2s; }
+        .nav-dot:hover { transform: scale(1.3); opacity: .7; }
+    </style>
+</head>
+
+<body class="flex flex-col items-center justify-center min-h-screen bg-[#0d0d0d] text-white select-none">
+
+<h1 class="text-4xl font-bold mb-6 tracking-wide">DAYN PHOTO</h1>
+
+<!-- Slider -->
+<div class="swiper w-full max-w-2xl h-[260px] md:h-[420px] rounded-2xl overflow-hidden shadow-2xl">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./images/1.jpeg"></div>
+        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./images/2.jpeg"></div>
+        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./images/3.jpeg"></div>
+        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./images/4.jpeg"></div>
+        <div class="swiper-slide cursor-pointer"><img class="w-full h-full object-contain" src="./images/5.jpeg"></div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="swiper-pagination"></div>
+
+    <!-- Custom Arrows -->
+    <div class="swiper-button-prev !text-white"></div>
+    <div class="swiper-button-next !text-white"></div>
+</div>
+
+<!-- Fullscreen modal -->
+<div id="fullscreenModal"
+     class="fixed inset-0 bg-black/90 hidden flex items-center justify-center z-50">
+    <img id="modalImage" class="max-w-full max-h-full object-contain rounded-lg shadow-xl">
+</div>
+
+<script>
+    // Slider инициализация
+    const swiper = new Swiper('.swiper', {
+        loop: true,
+        autoplay: { delay: 3500, disableOnInteraction: false },
+        effect: 'slide', // можно поменять на 'fade'
+        grabCursor: true,
+        slidesPerView: 1,
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
+    });
+
+    // Fullscreen open
+    const modal = document.getElementById('fullscreenModal');
+    const modalImg = document.getElementById('modalImage');
+
+    document.querySelectorAll('.swiper-slide img').forEach(img => {
+        img.addEventListener('click', () => {
+            modalImg.src = img.src;
+            modal.classList.remove('hidden');
+        });
+    });
+
+    // Fullscreen close (по клику на область)
+    modal.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    // Закрытие по ESC
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') modal.classList.add('hidden');
+    });
+</script>
+
+</body>
+</html>
